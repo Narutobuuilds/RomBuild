@@ -1,0 +1,28 @@
+name: Build ROM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Instalar dependências
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git curl wget openjdk-11-jdk python3 python3-pip unzip
+
+    - name: Clonar repositório da ROM
+      run: |
+        mkdir rom
+        cd rom
+        repo init -u https://github.com/LineageOS/android.git -b lineage-20.0
+        repo sync -c --no-clone-bundle --no-tags --force-sync -j4
+
+    - name: Compilar ROM
+      run: |
+        cd rom
+        source build/envsetup.sh
+        lunch lineage_<cebu>-userdebug
+        make bacon -j4
