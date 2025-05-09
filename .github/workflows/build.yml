@@ -12,6 +12,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git curl wget openjdk-11-jdk python3 python3-pip unzip
+        sudo curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo
+        sudo chmod a+rx /usr/local/bin/repo
 
     - name: Clonar repositório da ROM
       run: |
@@ -22,7 +24,8 @@ jobs:
 
     - name: Compilar ROM
       run: |
+        set -e
         cd rom
         source build/envsetup.sh
-        lunch lineage_<cebu>-userdebug
+        lunch lineage_cebu-userdebug
         make bacon -j4
